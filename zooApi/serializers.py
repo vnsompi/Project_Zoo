@@ -79,11 +79,16 @@ class ReservationSerializer(serializers.ModelSerializer):
                   'total_price','arrival_time',
                   'has_booked','created_at',
                   'updated_at']
+
         """read_only_fields = ('visitors', 'type_of_reservation')"""
 
 
 
-
+class TicketSerializer(serializers.ModelSerializer):
+    """serializer for ticket model"""
+    class Meta:
+        model = models.Ticket
+        fields = ['id','visitor','type_ticket','visite_day','price','created_at']
 
 
 

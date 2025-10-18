@@ -6,8 +6,8 @@ view for user
 from rest_framework import generics, permissions, authentication
 from rest_framework.settings import api_settings
 from rest_framework.authtoken.views import ObtainAuthToken
-from .models import Event, Reservation
-from .serializers import UserSerializer, AuthTokenSerializer, EventSerializer,ReservationSerializer
+from .models import Event, Reservation, Ticket
+from .serializers import UserSerializer, AuthTokenSerializer, EventSerializer, ReservationSerializer, TicketSerializer
 from .permissions import IsAdminOrReadOnly
 
 
@@ -65,6 +65,18 @@ class ReservationDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class TicketListCreateView(generics.ListCreateAPIView):
+    """get the list of tickets """
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class TicketDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """retrieve, update and delete ticket"""
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
 
 
