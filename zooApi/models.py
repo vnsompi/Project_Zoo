@@ -101,7 +101,7 @@ class Ticket(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.get_type_ticket_display()} ticket for {self.visitor.username} on {self.visit_date}"
+        return f"ticket for {self.visitor.name} on {self.visit_date}"
 
 
 
@@ -146,5 +146,5 @@ class Reservation(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'Reservation de {self.visitors.count()} visits {self.tickets.count()} tickets'
+        return f'Reservation of  {self.visitors.count()} visits {self.tickets.count()} tickets'
 
