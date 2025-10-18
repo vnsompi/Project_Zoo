@@ -1,14 +1,14 @@
 """
 view for user
 """
-from multiprocessing.pool import CLOSE
+
 
 from rest_framework import generics, permissions, authentication
 from rest_framework.settings import api_settings
 from rest_framework.authtoken.views import ObtainAuthToken
-from django.shortcuts import render
-from .serializers import UserSerializer,AuthTokenSerializer
-
+from .models import Event, Reservation
+from .serializers import UserSerializer, AuthTokenSerializer, EventSerializer,ReservationSerializer
+from .permissions import IsAdminOrReadOnly
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -31,4 +31,46 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         """Retrieve and return authenticated user"""
         return self.request.user
+
+
+class EventListCreateView(generics.ListCreateAPIView):
+    """get the list or create a new event """
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+
+class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """retrieve, update and delete event"""
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+
+class ReservationListView(generics.ListCreateAPIView):
+    """get the list of reservations """
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ReservationDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """retrieve, update and delete reservation"""
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+
+
+
+
+
+
+
+
+
 

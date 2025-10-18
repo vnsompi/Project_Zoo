@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.contrib.auth.admin  import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 from zooApi import models
+from zooApi.views import ReservationListView
+
 
 class UserAdmin(BaseUserAdmin):
     """define the admin pages for users"""
@@ -42,3 +44,6 @@ class UserAdmin(BaseUserAdmin):
     )
 
 admin.site.register(models.User, UserAdmin)
+admin.site.register(models.Reservation)
+admin.site.register(models.Event)
+

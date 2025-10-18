@@ -5,6 +5,7 @@ serializers for users
 from rest_framework import serializers
 from django.contrib.auth import get_user_model,authenticate
 from django.utils.translation import gettext_lazy as _
+from zooApi import models
 
 
 
@@ -54,4 +55,49 @@ class AuthTokenSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+
+
+
+class EventSerializer(serializers.ModelSerializer):
+    """serializer for event model"""
+
+    class Meta:
+        model = models.Event
+        fields = ['id','title','description','Event_date','participants','price','start_time','end_time']
+
+
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+    """serializer for reservation model"""
+
+    class Meta:
+        model = models.Reservation
+        fields = ['id','visitors',
+                  'tickets','event',
+                  'type_of_reservation',
+                  'total_price','arrival_time',
+                  'has_booked','created_at',
+                  'updated_at']
+        """read_only_fields = ('visitors', 'type_of_reservation')"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
