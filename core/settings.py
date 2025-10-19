@@ -57,6 +57,8 @@ CSRF_COOKIE_AGE = 60 * 60 * 24
 
 # Application definition
 
+AUTH_USER_MODEL = 'zooApi.User'
+
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
