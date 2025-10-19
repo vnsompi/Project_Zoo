@@ -80,7 +80,7 @@ class ReservationSerializer(serializers.ModelSerializer):
                   'has_booked','created_at',
                   'updated_at']
 
-        """read_only_fields = ('visitors', 'type_of_reservation')"""
+        """   read_only_fields = ('visitors', 'type_of_reservation')  """
 
 
 

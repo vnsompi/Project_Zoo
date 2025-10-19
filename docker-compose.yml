@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-zooprojectdb}
+      POSTGRES_USER: ${POSTGRES_USER:-zooprojectdb_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-zooprojectdb_user}
+    ports:
+      - "5432:5432"   # facultatif en dev
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-zooprojectdb_user} -d ${POSTGRES_DB:-zooprojectdb}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+    command: ["sh", "-c", "./entrypoint.sh"]
+    volumes:
+      - .:/app
+      - media:/app/media
+      - staticfiles:/app/staticfiles
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:
+  media:
+  staticfiles:

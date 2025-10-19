@@ -1,6 +1,5 @@
 """
-Models for user
-
+Models for use
 """
 
 from django.db import models
@@ -106,7 +105,6 @@ class Ticket(models.Model):
 
 
 
-
 class Reservation(models.Model):
     """Reservation model"""
     TYPE_CHOICES = [
@@ -147,4 +145,5 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f'Reservation of  {self.visitors.count()} visits {self.tickets.count()} tickets'
+
 
