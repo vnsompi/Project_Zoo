@@ -15,7 +15,7 @@ try:
         port=os.environ.get("DB_PORT", "5432"),
         connect_timeout=3
     )
-except Exception as e:
+except Exception:
     sys.exit(1)
 PY
   do
@@ -27,5 +27,5 @@ fi
 python manage.py migrate
 python manage.py collectstatic --noinput || true
 
-# Démarrer le serveur Django en dev
-exec python manage.py runserver 0.0.0.0:8000
+# ✅ Lancer le serveur en production avec Gunicorn
+exec gunicorn core.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 3

@@ -25,7 +25,7 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 5432
-    command: ["sh", "-c", "./entrypoint.sh"]
+    command: ["sh", "-c", "./entryfile.sh"]
     volumes:
       - .:/app
       - media:/app/media
