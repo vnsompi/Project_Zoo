@@ -41,8 +41,6 @@ TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
-
-# ⚠ Mets le bon domaine sans underscore si besoin (ex: egmc-songs.onrender.com)
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
@@ -112,15 +110,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
-
-# --- Cache ---
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache' if DEBUG else 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'songsbook-cache',
-    }
-}
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # --- DB ---
