@@ -76,6 +76,7 @@ class EventListCreateView(generics.ListCreateAPIView):
     """get the list or create a new event """
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [IsAdminOrReadOnly]
 
 
@@ -84,6 +85,7 @@ class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
     """retrieve, update and delete event"""
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [IsAdminOrReadOnly]
 
 
@@ -116,6 +118,7 @@ class TicketDetailView(generics.RetrieveUpdateDestroyAPIView):
     """retrieve, update and delete ticket"""
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [IsAdminOrReadOnly]
 
 

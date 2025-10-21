@@ -19,7 +19,7 @@ urlpatterns = [
     path('user/profile/', views.ManageUserView.as_view(), name='me'),
     path('user/profiles/admin/', AdminProfileView.as_view(), name='admin-profiles'),
     path('parameters/zoo', views.ZooParamsListCreateView.as_view(), name='zoo-params'),
-    
+
     path('animals/',views.AnimalListCreateView.as_view(), name='animal-list'),
     path('animal/<int:pk>/',views.AnimalDetailView.as_view(), name='animal-list'),
 
