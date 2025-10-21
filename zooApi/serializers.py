@@ -1,28 +1,41 @@
 """
-serializers for users
+Serializers for users
 """
 
 from rest_framework import serializers
-from django.contrib.auth import get_user_model,authenticate
+from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import gettext_lazy as _
 from zooApi import models
 
+User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """serializer for user model"""
+    """Serializer for th standard user """
+
     class Meta:
-        model = get_user_model()
-        fields = ['name','email','phone_number','password','is_active']
+        model = User
+        fields = [
+            'id', 'name',
+            'email', 'phone_number',
+            'password', 'role',
+            'is_active', 'date_joined',
+        ]
+
+        read_only_fields = ['id', 'role', 'is_active', 'date_joined']
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validated_data):
-        """create and return a new `User` instance, given the validated data"""
-        return get_user_model().objects.create_user(**validated_data)
+        """Create a new user which has role in default"""
+
+        return User.objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
-        """update and return user with entered data"""
+        """update a user """
+
+
         password = validated_data.pop('password', None)
+        validated_data.pop('role', None)
         user = super().update(instance, validated_data)
 
         if password:
@@ -30,6 +43,23 @@ class UserSerializer(serializers.ModelSerializer):
             user.save()
         return user
 
+
+class AdminUserSerializer(serializers.ModelSerializer):
+
+    department = serializers.CharField(source='personnel_profile.department', read_only=True)
+    hire_date = serializers.DateField(source='personnel_profile.hire_date', read_only=True)
+    title = serializers.CharField(source='personnel_profile.title', read_only=True)
+    role_personnel = serializers.CharField(source='personnel_profile.role', read_only=True)
+    status = serializers.CharField(source='personnel_profile.status', read_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'id','name','email','phone_number','role',
+            'department','hire_date','title','role_personnel','status',
+            'is_active','is_staff','date_joined'
+        ]
+        read_only_fields = ['id', 'date_joined']
 
 class AuthTokenSerializer(serializers.Serializer):
     """Serializer for authenticating requests with"""
@@ -88,21 +118,60 @@ class TicketSerializer(serializers.ModelSerializer):
     """serializer for ticket model"""
     class Meta:
         model = models.Ticket
-        fields = ['id','visitor','type_ticket','visit_date','price','created_at']
+        fields = ['id','reference','visitor','type_ticket','category','visit_date',
+                  'quantity','price','status','created_at']
 
 
 
 
+class AnnouncementSerializer(serializers.ModelSerializer):
+    """serializer for announcement model"""
+    class Meta:
+        model = models.Announcement
+        fields = ['id','title','content','status','created_by',
+                  'created_at','messages','begin_date', 'end_date', ]
+
+
+class SaleSerializer(serializers.ModelSerializer):
+    """serializer for sale model"""
+    class Meta:
+        model = models.Sale
+        fields = ['id','client_name', 'total_revenue', 'total_paid',
+                 'primary_currency', 'date' ]
+
+
+class AnimalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Animal
+        fields = [
+            'id','name',
+            'age','species',
+            'enclosure','caretaker',
+            'health_status','is_being_treated',
+            'last_control',
+        ]
+
+
+
+class ZooParamsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ZooParams
+        fields = [
+            'id','name',
+            'email','phone',
+            'currency','address',
+            'language','format_date',
+        ]
 
 
 
 
+"""for personel"""
 
+class PersonnelSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
 
-
-
-
-
-
-
-
+    class Meta:
+        model = models.Personnel
+        fields = ['id', 'user', 'title', 'role','department', 'hire_date',
+                  'status','created_at', 'updated_at']

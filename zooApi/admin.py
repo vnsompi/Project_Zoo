@@ -47,4 +47,10 @@ admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Reservation)
 admin.site.register(models.Event)
 admin.site.register(models.Ticket)
+admin.site.register(models.Personnel)
+admin.site.register(models.ZooParams)
+admin.site.register(models.Announcement)
+admin.site.register(models.Animal)
+admin.site.register(models.Sale)
+
 

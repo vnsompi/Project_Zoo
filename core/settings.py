@@ -110,7 +110,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi:application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # --- DB ---
@@ -268,3 +268,11 @@ logging.config.dictConfig({
         'django.server': DEFAULT_LOGGING['loggers']['django.server'],
     },
 })
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2000,
+
+}
