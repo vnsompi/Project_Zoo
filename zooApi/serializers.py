@@ -2,12 +2,15 @@
 Serializers for users
 """
 
-from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import gettext_lazy as _
 from zooApi import models
+from .models import Personnel
+from rest_framework import serializers
+
 
 User = get_user_model()
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -44,22 +47,56 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
-class AdminUserSerializer(serializers.ModelSerializer):
 
-    department = serializers.CharField(source='personnel_profile.department', read_only=True)
-    hire_date = serializers.DateField(source='personnel_profile.hire_date', read_only=True)
-    title = serializers.CharField(source='personnel_profile.title', read_only=True)
-    role_personnel = serializers.CharField(source='personnel_profile.role', read_only=True)
-    status = serializers.CharField(source='personnel_profile.status', read_only=True)
+
+class PersonnelSerializer(serializers.ModelSerializer):
+
+    department = serializers.CharField(source='personnel_profile.department', required=False)
+    hire_date = serializers.DateField(source='personnel_profile.hire_date', required=False)
+    title = serializers.CharField(source='personnel_profile.title', required=False)
+    role_personnel = serializers.CharField(source='personnel_profile.role', required=False)
+    status = serializers.CharField(source='personnel_profile.status', required=False)
 
     class Meta:
         model = User
         fields = [
-            'id','name','email','phone_number','role',
-            'department','hire_date','title','role_personnel','status',
-            'is_active','is_staff','date_joined'
+            'id', 'name', 'email', 'phone_number', 'role',
+            'department', 'hire_date', 'title', 'role_personnel', 'status',
+            'is_active', 'is_staff', 'date_joined'
         ]
         read_only_fields = ['id', 'date_joined']
+
+    def create(self, validated_data):
+
+
+        profile_data = validated_data.pop('personnel_profile', {})
+
+
+        user = User.objects.create(**validated_data)
+
+
+        Personnel.objects.create(user=user, **profile_data)
+
+        return user
+
+    def update(self, instance, validated_data):
+
+        profile_data = validated_data.pop('personnel_profile', {})
+        profile = getattr(instance, 'personnel_profile', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        if profile:
+            for attr, value in profile_data.items():
+                setattr(profile, attr, value)
+            profile.save()
+
+        return instance
+
+
+
 
 class AuthTokenSerializer(serializers.Serializer):
     """Serializer for authenticating requests with"""
@@ -165,13 +202,13 @@ class ZooParamsSerializer(serializers.ModelSerializer):
 
 
 
-
-"""for personel"""
-
-class PersonnelSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+class AdminUserSerializer(serializers.ModelSerializer):
+    """Serializer spécifique pour les admins"""
 
     class Meta:
-        model = models.Personnel
-        fields = ['id', 'user', 'title', 'role','department', 'hire_date',
-                  'status','created_at', 'updated_at']
+        model = User
+        fields = [
+            'id', 'name', 'email', 'phone_number', 'role',
+            'is_active', 'is_staff', 'is_superuser', 'date_joined'
+        ]
+        read_only_fields = ['id', 'date_joined']
