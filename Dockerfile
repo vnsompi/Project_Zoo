@@ -27,4 +27,5 @@ USER appuser
 RUN python manage.py collectstatic --noinput || true
 
 # Commande de démarrage : migrations + lancement serveur
-CMD sh -c "python manage.py migrate && gunicorn ZooProject.core.wsgi:application -w 3 -b 0.0.0.0:${PORT:-8000}"
+CMD sh -c "python manage.py migrate && gunicorn core.wsgi:application -w 3 -b 0.0.0.0:${PORT:-8000}"
+
